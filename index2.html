@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор закупки товаров</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary-color: #8b5cf6;
+            --secondary-hover: #7c3aed;
+            --text-color: #1e293b;
+            --text-secondary: #475569;
+            --text-light: #94a3b8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --input-bg: #f1f5f9;
+            --input-focus-bg: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 16px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 40px 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            color: white;
+            text-align: center;
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.025em;
+        }
+
+        .header-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .calculator-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 3px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .label-container {
+            display: flex;
+            align-items: center;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--text-color);
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        .tooltip-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--text-light);
+            cursor: help;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 220px;
+            background-color: #334155;
+            color: white;
+            text-align: center;
+            border-radius: var(--radius-xs);
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 13px;
+            font-weight: normal;
+            box-shadow: var(--shadow);
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        input {
+            padding: 14px 18px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xs);
+            font-size: 16px;
+            transition: var(--transition);
+            background-color: var(--input-bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-color);
+        }
+
+        input:hover {
+            border-color: #cbd5e1;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+            background-color: var(--input-focus-bg);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        button {
+            padding: 14px 28px;
+            border-radius: var(--radius-xs);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-reset {
+            background-color: white;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-reset:hover {
+            background-color: var(--input-bg);
+        }
+
+        .btn-calculate {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-calculate:hover {
+            background: linear-gradient(135deg, var(--primary-hover), var(--secondary-hover));
+            box-shadow: var(--shadow);
+        }
+
+        .results {
+            margin-top: 40px;
+            padding: 32px;
+            border-radius: var(--radius);
+            background-color: #f8f9ff;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--primary-color);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+
+        @media (min-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .result-item {
+            background-color: white;
+            padding: 24px;
+            border-radius: var(--radius-xs);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .result-item p:first-child {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .result-item p:last-child {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .exchange-rates {
+            background-color: #f1f5f9;
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .exchange-rates h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            margin: 32px 0;
+            border-radius: 1px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Калькулятор закупки товаров</h1>
+            <p class="header-subtitle">Рассчитайте стоимость закупки товаров из Китая с учетом доставки и комиссии</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="calculator-card">
+            <div class="card-title">
+                <h2>Калькулятор стоимости</h2>
+            </div>
+
+            <form id="calculatorForm">
+                <div class="exchange-rates">
+                    <h3>Курсы валют и тарифы</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <div class="label-container">
+                                <label for="bynToCny">Курс BYN к CNY</label>
+                                <div class="tooltip">
+                                    <svg class="tooltip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                    <span class="tooltip-text">Курс обмена BYN к китайскому юаню</span>
+                                </div>
+                            </div>
+                            <input type="number" id="bynToCny" step="0.01" min="0" placeholder="0.45" value="0.45" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="label-container">
+                                <label for="pricePerKg">Цена в долларах за килограмм</label>
+                                <div class="tooltip">
+                                    <svg class="tooltip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                    <span class="tooltip-text">Стоимость доставки за 1 кг в долларах</span>
+                                </div>
+                            </div>
+                            <input type="number" id="pricePerKg" step="0.01" min="0" placeholder="4.90" value="4.90" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="label-container">
+                                <label for="bynToUsd">Курс BYN к доллару</label>
+                                <div class="tooltip">
+                                    <svg class="tooltip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                    <span class="tooltip-text">Курс обмена BYN к доллару США</span>
+                                </div>
+                            </div>
+                            <input type="number" id="bynToUsd" step="0.01" min="0" placeholder="3.20" value="3.20" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-divider"></div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <div class="label-container">
+                            <label for="shippingCost">Стоимость доставки в Китае (¥)</label>
+                            <div class="tooltip">
+                                <svg class="tooltip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <span class="tooltip-text">Стоимость доставки между складами в Китае в юанях</span>
+                            </div>
+                        </div>
+                        <input type="number" id="shippingCost" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productCost">Стоимость товара (¥)</label>
+                        <input type="number" id="productCost" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight">Вес товара (кг)</label>
+                        <input type="number" id="weight" step="0.001" min="0" placeholder="0.000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="label-container">
+                            <label for="serviceFee">Процент за работу (%)</label>
+                            <div class="tooltip">
+                                <svg class="tooltip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                <span class="tooltip-text">Комиссия за услуги посредника</span>
+                            </div>
+                        </div>
+                        <input type="number" id="serviceFee" step="0.1" min="0" placeholder="0.0" required>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" id="resetBtn" class="btn-reset">Сбросить</button>
+                    <button type="submit" class="btn-calculate">Рассчитать</button>
+                </div>
+            </form>
+
+            <div id="results" class="results">
+                <h3>Результаты расчета</h3>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <p>Цена (BYN):</p>
+                        <p id="priceBYN">0.00 BYN</p>
+                    </div>
+                    <div class="result-item">
+                        <p>Цена с процентом (BYN):</p>
+                        <p id="priceWithFee">0.00 BYN</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculatorForm = document.getElementById('calculatorForm');
+            const shippingCostInput = document.getElementById('shippingCost');
+            const productCostInput = document.getElementById('productCost');
+            const weightInput = document.getElementById('weight');
+            const serviceFeeInput = document.getElementById('serviceFee');
+            const bynToCnyInput = document.getElementById('bynToCny');
+            const pricePerKgInput = document.getElementById('pricePerKg');
+            const bynToUsdInput = document.getElementById('bynToUsd');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultsDiv = document.getElementById('results');
+            const priceBYNElement = document.getElementById('priceBYN');
+            const priceWithFeeElement = document.getElementById('priceWithFee');
+
+            // Обработчик отправки формы
+            calculatorForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Получение значений из формы
+                const shippingCost = parseFloat(shippingCostInput.value);
+                const productCost = parseFloat(productCostInput.value);
+                const weight = parseFloat(weightInput.value);
+                const serviceFee = parseFloat(serviceFeeInput.value);
+                const bynToCny = parseFloat(bynToCnyInput.value);
+                const pricePerKg = parseFloat(pricePerKgInput.value);
+                const bynToUsd = parseFloat(bynToUsdInput.value);
+
+                // Проверка на заполнение всех полей
+                if (isNaN(shippingCost) || isNaN(productCost) || isNaN(weight) || isNaN(serviceFee) || 
+                    isNaN(bynToCny) || isNaN(pricePerKg) || isNaN(bynToUsd)) {
+                    alert('Пожалуйста, заполните все поля корректными значениями');
+                    return;
+                }
+
+                // Расчет цены в BYN с использованием введенных курсов валют
+                // Формула: (((стоимость товара в юанях) + стоимость доставки по Китаю) * курс BYN к CNY) + (вес * цена за кг в $ * курс BYN к $)
+                const priceBYN = ((productCost + shippingCost) * bynToCny) + (weight * pricePerKg * bynToUsd);
+
+                // Расчет цены с процентом за работу
+                const priceWithFee = priceBYN + (priceBYN * serviceFee / 100);
+
+                // Отображение результатов
+                priceBYNElement.textContent = priceBYN.toFixed(2) + ' BYN';
+                priceWithFeeElement.textContent = priceWithFee.toFixed(2) + ' BYN';
+                resultsDiv.classList.add('show');
+            });
+
+            // Обработчик кнопки сброса
+            resetBtn.addEventListener('click', function() {
+                calculatorForm.reset();
+                // Восстановление значений по умолчанию для курсов валют
+                bynToCnyInput.value = "0.45";
+                pricePerKgInput.value = "4.90";
+                bynToUsdInput.value = "3.20";
+                resultsDiv.classList.remove('show');
+            });
+        });
+    </script>
+</body>
+</html>
